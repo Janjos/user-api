@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-	"user-api/usecases"
+
+	"github.com/Janjos/user-api/usecases"
 )
 
 type UserController struct {

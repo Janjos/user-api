@@ -2,7 +2,8 @@ package repositories
 
 import (
 	"database/sql"
-	"user-api/entities"
+
+	"github.com/Janjos/user-api/entities"
 )
 
 type UserRepositoryImpl struct {

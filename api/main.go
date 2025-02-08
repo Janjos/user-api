@@ -5,9 +5,9 @@ import (
 	"log"
 	"net/http"
 
-	"user-api/controllers"
-	"user-api/interfaces/repositories"
-	"user-api/usecases"
+	"github.com/Janjos/user-api/controllers"
+	"github.com/Janjos/user-api/interfaces/repositories"
+	"github.com/Janjos/user-api/usecases"
 
 	_ "github.com/lib/pq"
 )

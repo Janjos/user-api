@@ -1,4 +1,4 @@
-module user-api
+module github.com/Janjos/user-api
 
 go 1.22.4
 
