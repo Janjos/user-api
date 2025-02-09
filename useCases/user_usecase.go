@@ -1,8 +1,8 @@
-package usecases
+package useCases
 
 import (
-	"github.com/Janjos/user-api/entities"
-	"github.com/Janjos/user-api/interfaces/repositories"
+	"github.com/janjos/user-api/entities"
+	"github.com/janjos/user-api/interfaces/repositories"
 )
 
 type UserUsecase struct {

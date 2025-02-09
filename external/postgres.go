@@ -1,38 +1,54 @@
 package external
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
-	"log"
 
-	_ "github.com/lib/pq"
+	"github.com/jackc/pgx/v5"
 )
 
-type Config struct {
-	Host     string
-	Port     string
-	User     string
-	Password string
-	DBName   string
+type DbConnection struct {
+	Db *pgx.Conn
 }
 
-func NewPostgresConnection(cfg Config) (*sql.DB, error) {
+const (
+	createTables = `
+    CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+		email varchar(255) NOT NULL,
+		password varchar(50) NOT NULL
+    );
+    `
+)
 
-	connStr := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName,
-	)
-
-	db, err := sql.Open("postgres", connStr)
+func NewPostgresDb(url string) (*pgx.Conn, error) {
+	config, err := pgx.ParseConfig(url)
 	if err != nil {
-		return nil, fmt.Errorf("Error on PostgreSQL connection: %w", err)
+		fmt.Println("Error parsing config", err)
+		return nil, err
 	}
 
-	err = db.Ping()
+	db, err := pgx.ConnectConfig(context.Background(), config)
 	if err != nil {
-		return nil, fmt.Errorf("Failed PostgreSQL connection test: %w", err)
+		fmt.Println("Error creating database connection", err)
+		return nil, err
 	}
 
-	log.Println("Suscessfully connected with postgress")
+	if _, err := db.Exec(context.Background(), createTables); err != nil {
+		fmt.Println("Error creating table users", err)
+		return nil, err
+	}
+
 	return db, nil
+}
+
+func NewDbs() (*DbConnection, error) {
+	pgDb, err := NewPostgresDb("postgres://postgres:senha123@db:5432/userDatabase")
+	if err != nil {
+		return nil, err
+	}
+
+	return &DbConnection{
+		Db: pgDb,
+	}, nil
 }

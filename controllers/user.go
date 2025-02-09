@@ -5,14 +5,14 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Janjos/user-api/usecases"
+	"github.com/janjos/user-api/useCases"
 )
 
 type UserController struct {
-	userUsecase *usecases.UserUsecase
+	userUsecase *useCases.UserUsecase
 }
 
-func NewUserController(userUsecase *usecases.UserUsecase) *UserController {
+func NewUserController(userUsecase *useCases.UserUsecase) *UserController {
 	return &UserController{userUsecase: userUsecase}
 }
 

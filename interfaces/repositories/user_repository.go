@@ -1,6 +1,6 @@
 package repositories
 
-import "github.com/Janjos/user-api/entities"
+import "github.com/janjos/user-api/entities"
 
 type UserRepository interface {
 	Save(user *entities.User) error

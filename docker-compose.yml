@@ -4,13 +4,16 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - DB_HOST=db
       - DB_PORT=5432
       - DB_USER=postgres
       - DB_PASSWORD=senha123
-      - DB_NAME=UserBase
+      - DB_NAME=userDatabase
+    networks:
+      - compose-bridge
 
   db:
     image: postgres:15-alpine
@@ -19,9 +22,20 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=senha123
-      - POSTGRES_DB=meubanco
+      - POSTGRES_DB=userDatabase
+    networks:
+      - compose-bridge
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+networks:
+  compose-bridge:
+    driver: bridge
 
 volumes:
   postgres_data:

@@ -1,27 +1,26 @@
 package main
 
 import (
-	"database/sql"
 	"log"
 	"net/http"
 
-	"github.com/Janjos/user-api/controllers"
-	"github.com/Janjos/user-api/interfaces/repositories"
-	"github.com/Janjos/user-api/usecases"
+	"github.com/janjos/user-api/controllers"
+	"github.com/janjos/user-api/external"
+	"github.com/janjos/user-api/interfaces/repositories"
+	"github.com/janjos/user-api/useCases"
 
 	_ "github.com/lib/pq"
 )
 
 func main() {
-	db, err := sql.Open("postgres", "user=postgres password=senha123 dbname=meubanco sslmode=disable")
+	dbConnection, err := external.NewDbs()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error initializing database: %v", err)
 	}
-	defer db.Close()
 
-	userRepo := repositories.NewUserRepositoryImpl(db)
+	userRepo := repositories.NewUserRepositoryImpl(dbConnection)
 
-	userUsecase := usecases.NewUserUsecase(userRepo)
+	userUsecase := useCases.NewUserUsecase(userRepo)
 
 	userController := controllers.NewUserController(userUsecase)
 
