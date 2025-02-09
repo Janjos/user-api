@@ -26,6 +26,7 @@ func main() {
 
 	http.HandleFunc("/users", userController.CreateUser)
 	http.HandleFunc("/users/get", userController.GetUserByID)
+	http.HandleFunc("/users/login", userController.LogIn)
 
 	log.Println("Running on :8080...")
 	log.Fatal(http.ListenAndServe(":8080", nil))

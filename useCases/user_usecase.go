@@ -35,3 +35,12 @@ func (uc *UserUsecase) GetUserByID(id int) (*entities.User, error) {
 
 	return user, nil
 }
+
+func (uc *UserUsecase) LogIn(email, password string) (*entities.User, error) {
+	user, err := uc.userRepo.LogIn(email, password)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
