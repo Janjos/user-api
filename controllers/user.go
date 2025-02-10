@@ -78,3 +78,24 @@ func (c *UserController) LogIn(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(user)
 }
+
+func (c *UserController) VerifyToken(w http.ResponseWriter, r *http.Request) {
+	type response struct {
+		Id float64 `json:"id"`
+	}
+	token := r.Header.Get("Authorization")
+	if token == "" {
+		http.Error(w, "No token found", http.StatusUnauthorized)
+		return
+	}
+
+	id, err := c.userUsecase.VerifyToken(token)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(response{Id: id})
+}

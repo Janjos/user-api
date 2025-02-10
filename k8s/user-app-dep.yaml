@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: user-app
+  template:
+    metadata:
+      labels:
+        app: user-app
+    spec:
+      containers:
+      - name: user-app-container
+        image: matheusgomes1/user-api:1.2
+        resources:
+          limits:
+            memory: 100Mi
+            ephemeral-storage: "2Gi"

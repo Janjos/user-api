@@ -2,6 +2,7 @@ package useCases
 
 import (
 	"github.com/janjos/user-api/entities"
+	"github.com/janjos/user-api/external"
 	"github.com/janjos/user-api/interfaces/repositories"
 )
 
@@ -43,4 +44,13 @@ func (uc *UserUsecase) LogIn(email, password string) (*entities.User, error) {
 	}
 
 	return user, nil
+}
+
+func (uc *UserUsecase) VerifyToken(token string) (float64, error) {
+	id, err := external.VerifyToken(token)
+	if err != nil {
+		return -1, err
+	}
+
+	return id, nil
 }
