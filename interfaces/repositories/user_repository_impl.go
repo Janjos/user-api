@@ -41,7 +41,7 @@ func (r *UserRepositoryImpl) LogIn(email, password string) (*entities.User, erro
 
 	match := external.VerifyPassword(password, user.Password)
 
-	if err != nil || !match {
+	if !match {
 		fmt.Println("Error logging in user - hash verify = $1", match)
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (r *UserRepositoryImpl) LogIn(email, password string) (*entities.User, erro
 		return &user, nil
 	}
 
-	tokenString, err := external.CreateToken(user.Email)
+	tokenString, err := external.CreateToken(user.Email, user.Id)
 	if err != nil {
 		fmt.Errorf("No email found")
 		return nil, err

@@ -24,6 +24,7 @@ func main() {
 
 	userController := controllers.NewUserController(userUsecase)
 
+	http.HandleFunc("/token", userController.VerifyToken)
 	http.HandleFunc("/users", userController.CreateUser)
 	http.HandleFunc("/users/get", userController.GetUserByID)
 	http.HandleFunc("/users/login", userController.LogIn)

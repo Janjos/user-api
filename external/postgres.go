@@ -46,7 +46,8 @@ func NewPostgresDb(url string) (*pgx.Conn, error) {
 }
 
 func NewDbs() (*DbConnection, error) {
-	pgDb, err := NewPostgresDb("postgres://postgres:senha123@db:5432/userDatabase")
+	pgDb, err := NewPostgresDb("postgres://postgres:123@user-db:5432/postgres")
+	// pgDb, err := NewPostgresDb("postgres://postgres:senha123@db:5432/userDatabase")
 	if err != nil {
 		return nil, err
 	}
@@ -68,10 +69,11 @@ func VerifyPassword(password, hash string) bool {
 
 var secretKey = []byte("secret-key")
 
-func CreateToken(email string) (string, error) {
+func CreateToken(email string, id int) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"email": email,
+			"id":    id,
 			"exp":   time.Now().Add(time.Hour * 24).Unix(),
 		})
 
@@ -83,18 +85,19 @@ func CreateToken(email string) (string, error) {
 	return tokenString, nil
 }
 
-func VerifyToken(tokenString string) error {
+func VerifyToken(tokenString string) (float64, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return secretKey, nil
 	})
 
 	if err != nil {
-		return err
+		return -1, err
 	}
 
-	if !token.Valid {
-		return fmt.Errorf("invalid token")
+	if claims, ok := token.Claims.(jwt.MapClaims); ok {
+		fmt.Println(claims["email"], claims["id"])
+		return claims["id"].(float64), nil
 	}
 
-	return nil
+	return -1, nil
 }
